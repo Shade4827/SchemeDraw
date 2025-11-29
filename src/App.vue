@@ -30,11 +30,21 @@
     </div>
     <div class="container">
       <div class="left-panel">
-        <div v-if="fetchedData && schemes && index >= 0">
+        <div
+          v-if="fetchedData && schemes && index >= 0"
+          class="image-container"
+        >
           <img
             :src="schemes[index]?.image_uris.normal"
             alt="Scheme Card"
           />
+          <button
+            class="zoom-button"
+            @click="openModal(schemes[index]?.image_uris.large || '')"
+            title="Zoom"
+          >
+            🔍
+          </button>
         </div>
         <div v-else-if="fetchedData">
           <p>Total Cards: {{ fetchedData.total_cards }}</p>
@@ -50,15 +60,37 @@
             <li
               v-for="(s, i) in ongoingSchemes"
               :key="i"
+              class="image-container"
             >
               <img
                 :src="s.image_uris.normal"
                 alt="Ongoing Scheme Card"
                 @click="activateOngoingScheme(s)"
               />
+              <button
+                class="zoom-button"
+                @click.stop="openModal(s.image_uris.large)"
+                title="Zoom"
+              >
+                🔍
+              </button>
             </li>
           </ul>
         </div>
+      </div>
+    </div>
+
+    <div
+      v-if="modalOpen"
+      class="modal-overlay"
+      @click="closeModal"
+    >
+      <div class="modal-content" @click.stop>
+        <button class="close-button" @click="closeModal">✕</button>
+        <img
+          :src="modalImageSrc"
+          alt="Zoomed card" class="modal-image"
+        />
       </div>
     </div>
   </main>
@@ -76,6 +108,7 @@ interface Scheme {
   image_uris: {
     small: string
     normal: string
+    large: string
   },
   type_line: TypeLine
 }
@@ -91,6 +124,8 @@ const fetchedData = ref<ScryfallListResponse | null>(null)
 const schemes = ref<Scheme[]>([])
 const index = ref<number>(-1)
 const ongoingSchemes = ref<Scheme[]>([])
+const modalOpen = ref<boolean>(false)
+const modalImageSrc = ref<string>('')
 
 interface QueryOptions {
   japaneseOnly: boolean
@@ -164,5 +199,15 @@ const activateOngoingScheme = (scheme: Scheme) => {
   if (schemeIndex > -1) {
     ongoingSchemes.value.splice(schemeIndex, 1)
   }
+}
+
+const openModal = (imageUrl: string) => {
+  modalImageSrc.value = imageUrl
+  modalOpen.value = true
+}
+
+const closeModal = () => {
+  modalOpen.value = false
+  modalImageSrc.value = ''
 }
 </script>
