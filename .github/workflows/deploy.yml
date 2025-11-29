@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - deploy_setting
   pull_request:
     branches:
       - main
-      - deploy_setting
 
 jobs:
   build-and-deploy:
