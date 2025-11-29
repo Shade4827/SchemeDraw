@@ -52,7 +52,7 @@
               :key="i"
             >
               <img
-                :src="s.image_uris.small"
+                :src="s.image_uris.normal"
                 alt="Ongoing Scheme Card"
                 @click="activateOngoingScheme(s)"
               />

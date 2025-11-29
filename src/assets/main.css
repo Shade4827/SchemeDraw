@@ -124,7 +124,7 @@ main {
 
 .scrollable-list img {
   width: 100%;
-  max-width: 150px;
+  max-width: 250px;
   border-radius: 4px;
   transition: opacity 0.2s;
 }
